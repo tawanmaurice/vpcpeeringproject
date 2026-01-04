@@ -1,5 +1,7 @@
 VPC Peering + EC2 Connectivity (AWS Console Walkthrough)
 
+
+
 This project demonstrates VPC Peering between two separate VPCs in AWS (same region), and verifies private network connectivity between EC2 instances across those VPCs using ICMP ping (and optional simple HTTP pages to visually confirm which instance you’re hitting).
 
 Why this matters (what a recruiter should take away)
@@ -67,7 +69,11 @@ A peering connection is created between both VPCs and accepted (same AWS account
 
 First peering confirmation
 
+
+
 <img width="1888" height="923" alt="First peering confirmation" src="https://github.com/user-attachments/assets/0b854e8b-bed4-4d80-b15d-9ed1803807d9" />
+
+
 
 Second peering confirmation
 
@@ -103,7 +109,7 @@ Type: All ICMP – IPv4
 Source: peer VPC CIDR (10.112.0.0/16 or 10.113.0.0/16)
 
 
-security group:
+screenshot for security group:
 
 <img width="1910" height="853" alt="security group arm project" src="https://github.com/user-attachments/assets/645a4ced-41ac-4fd0-8326-da4884754754" />
 
