@@ -38,152 +38,131 @@ Security Group rules to allow ICMP (ping)
 
 Validation with ping (private IP → private IP)
 
-Step-by-step (AWS Console)
-1) Confirm you have 2 VPCs and 2 EC2 instances (one per VPC)
-
-This project assumes:
-
-Each EC2 is launched into the correct VPC/subnet
-
-You can connect to each instance (EC2 Instance Connect or SSH)
-
-Screenshot (project context / console view):
 
 
-2) Create the VPC Peering Connection
 
-In the AWS Console:
+VPC Peering Connection between both VPCs
 
-Go to VPC → Peering connections
+Route tables updated on both sides
 
-Click Create peering connection
+Security Groups allow ICMP
 
-Choose:
+Connectivity verified via private IP ping
 
-Requester VPC: VPC A (example: 10.113.0.0/16)
+<img width="1891" height="933" alt="vpcarmproject" src="https://github.com/user-attachments/assets/6bd50e1e-4b7c-4d70-9194-0bee235f0782" />
 
-Accepter VPC: VPC B (example: 10.112.0.0/16)
+Step 1: EC2 Instances (One per VPC)
 
-Create the peering connection
-
-Screenshot (peering created / established):
+Each EC2 instance is launched into its respective VPC and subnet.
 
 
-If you’re peering across accounts, you must accept the peering request in the accepter account. (In this project, both are in the same account.)
-
-Screenshot (peering confirmed/active):
+<img width="1915" height="958" alt="ec2peering project" src="https://github.com/user-attachments/assets/fb641e69-669c-4496-9a78-9237b74e9c91" />
 
 
-3) Update Route Tables (BOTH sides)
+Step 2: Create VPC Peering Connection
 
-This is the most important part people miss.
+A peering connection is created between both VPCs and accepted (same AWS account).
 
-VPC A Route Table (example: 10.113.0.0/16)
+📸 Screenshots:
 
-Add a route so VPC A knows how to reach VPC B:
+First peering confirmation
 
-Destination: 10.112.0.0/16
+<img width="1888" height="923" alt="First peering confirmation" src="https://github.com/user-attachments/assets/0b854e8b-bed4-4d80-b15d-9ed1803807d9" />
 
-Target: the VPC peering connection (pcx-…)
+Second peering confirmation
 
-VPC B Route Table (example: 10.112.0.0/16)
+<img width="1895" height="931" alt="Second peering confirmation" src="https://github.com/user-attachments/assets/627a5582-22e5-4e5d-818e-31f5db20b797" />
 
-Add a route so VPC B knows how to reach VPC A:
+Step 3: Update Route Tables (Both Sides)
 
-Destination: 10.113.0.0/16
+Each VPC route table includes a route to the other VPC via the peering connection.
 
-Target: the VPC peering connection (pcx-…)
+Required routes:
 
-Screenshot (route table updated on one side):
+In arm-project-vpc route table
+10.113.0.0/16 → pcx-…
+
+In arm project2-vpc route table
+10.112.0.0/16 → pcx-…
 
 
-Screenshot (route table updated on the other side):
+
+<img width="1898" height="865" alt="Peering Proj SS" src="https://github.com/user-attachments/assets/bfbe9285-9eb3-4463-b3e6-75583edeb5cb" />
+
+<img width="1915" height="958" alt="ec2peering project" src="https://github.com/user-attachments/assets/48b6848c-1dfe-4b43-b113-6a971f680b1c" />
 
 
-✅ At the end, each route table should have:
+Step 4: Security Groups (ICMP Allowed)
 
-local route for its own CIDR (automatic)
+Security Groups on both EC2 instances allow ICMP from the peer VPC CIDR.
 
-0.0.0.0/0 → IGW (if public subnet)
+Inbound rule example:
 
-peering route → remote VPC CIDR via pcx-…
+Type: All ICMP – IPv4
 
-4) Update Security Groups (allow ICMP/ping)
+Source: peer VPC CIDR (10.112.0.0/16 or 10.113.0.0/16)
 
-To test with ping, the target instance must allow ICMP inbound from the other VPC CIDR (or from the specific peer instance security group).
 
-Recommended (simple for demo):
+security group:
 
-Inbound rule on each instance SG:
+<img width="1910" height="853" alt="security group arm project" src="https://github.com/user-attachments/assets/645a4ced-41ac-4fd0-8326-da4884754754" />
 
-Type: All ICMP - IPv4 (or Echo Request)
+Step 5: Connectivity Test (Ping)
 
-Source: peer VPC CIDR
+Private IP connectivity is validated using ping between EC2 instances.
 
-If instance is in 10.112.0.0/16, allow ICMP from 10.113.0.0/16
-
-If instance is in 10.113.0.0/16, allow ICMP from 10.112.0.0/16
-
-Also confirm:
-
-Outbound allows traffic (default SG outbound “All traffic” is fine for demo)
-
-NACLs aren’t blocking ICMP (most default NACLs allow all)
-
-5) Connect to EC2 and test private connectivity
-Find the private IP of the peer instance
-
-In EC2 console, select the instance and copy its Private IPv4 address.
-
-Then, from instance A, run:
+Commands used:
 
 ping <peer-private-ip>
-
-
-If you want the ping to stop automatically after a few packets:
-
 ping -c 3 <peer-private-ip>
 
 
-To stop a running ping manually: press Ctrl + C
+To stop a running ping:
 
-Screenshot (ping test #1):
-
-
-Screenshot (ping test #1a):
+Ctrl + C
 
 
-Screenshot (ping success across VPCs):
+📸 Screenshots:
 
 
-6) Optional: Simple web page proof (visual verification)
+<img width="1762" height="938" alt="ping check 1" src="https://github.com/user-attachments/assets/c04a3ba3-398d-405b-bb4c-a89d84532738" />
 
-To make the demo more recruiter-friendly, you can serve a basic HTML page on each EC2 and show that:
+<img width="1893" height="930" alt="ping check 1a" src="https://github.com/user-attachments/assets/1444a836-e2d2-4339-8f1d-9f4215f58f20" />
 
-Each instance responds with its own “identity” page
-
-(Optional) You can curl the other instance’s private IP if you open port 80 internally
-
-Example web headers shown in browser:
-
-Screenshot (Instance page 1):
+<img width="1918" height="915" alt="ping check 2" src="https://github.com/user-attachments/assets/f36cd7eb-cc39-4242-a2a6-cc88fb980656" />
 
 
-Troubleshooting checklist (fast)
+Optional: HTTP Page Verification
 
-If ping fails, check these in order:
+Each EC2 serves a simple HTML page to visually confirm which instance is being reached.
+
+📸 Screenshots:
+
+<img width="1915" height="957" alt="image" src="https://github.com/user-attachments/assets/0b7a951c-bdb9-4940-b942-0e29c871bd44" />
+
+
+<img width="1913" height="957" alt="image" src="https://github.com/user-attachments/assets/db7416db-cb2c-4039-bdb5-309afaab5117" />
+
+
+
+
+
+
+Troubleshooting Checklist
+
+If ping fails, verify:
 
 Peering status = Active
 
-Routes exist on BOTH route tables
+Routes exist in both route tables
 
-VPC A → remote CIDR via pcx-…
+Security Groups allow ICMP from peer CIDR
 
-VPC B → remote CIDR via pcx-…
+NACLs allow ICMP
 
-Security Groups
+CIDRs do not overlap
 
-Target instance allows ICMP from peer CIDR (or SG)
+You’re pinging a real private IP
 
 NACLs allow ICMP
 
