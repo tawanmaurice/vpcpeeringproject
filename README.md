@@ -1,4 +1,4 @@
-🔗 VPC Peering + EC2 Connectivity
+VPC Peering + EC2 Connectivity
 (AWS Console Walkthrough)
 
 This project demonstrates VPC Peering between two separate VPCs in AWS (same region) and verifies private network connectivity between EC2 instances across those VPCs using ICMP ping.
