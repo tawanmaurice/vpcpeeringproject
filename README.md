@@ -1,55 +1,79 @@
-VPC Peering + EC2 Connectivity (AWS Console Walkthrough)
+🔗 VPC Peering + EC2 Connectivity
+(AWS Console Walkthrough)
 
+This project demonstrates VPC Peering between two separate VPCs in AWS (same region) and verifies private network connectivity between EC2 instances across those VPCs using ICMP ping.
+(Optional simple HTTP pages are used to visually confirm which instance is being reached.)
 
+🎯 Why This Matters
+(What a Recruiter Should Take Away)
 
-This project demonstrates VPC Peering between two separate VPCs in AWS (same region), and verifies private network connectivity between EC2 instances across those VPCs using ICMP ping (and optional simple HTTP pages to visually confirm which instance you’re hitting).
+In real environments, teams often split infrastructure into multiple VPCs—by application, environment, business unit, or compliance boundary.
 
-Why this matters (what a recruiter should take away)
+VPC Peering is one clean way to allow private traffic between VPCs without exposing services to the public internet.
 
-In real environments, teams often split infrastructure into multiple VPCs (by app, environment, business unit, or compliance boundary). VPC Peering is one clean way to allow private traffic between VPCs without exposing services to the public internet.
-
-Key value:
+Key Value
 
 Connect services across VPCs using private IPs
 
 Avoid routing sensitive traffic over the public internet
 
-Common in multi-team AWS orgs: shared services VPC, app VPCs, data VPCs, etc.
+Common in multi-team AWS organizations:
 
-Typical uses
+Shared services VPC
+
+Application VPCs
+
+Data / analytics VPCs
+
+🧩 Typical Real-World Uses
 
 App VPC ↔ Database VPC communication
 
-Shared tooling VPC (logging/monitoring/bastion) ↔ workload VPCs
+Shared tooling VPC (logging / monitoring / bastion) ↔ workload VPCs
 
 Migration phases: old VPC ↔ new VPC during cutover
 
-What this project builds
+🏗️ What This Project Builds
+Network Foundation
 
 Two VPCs with non-overlapping CIDRs
 
-Example shown: 10.112.0.0/16 and 10.113.0.0/16
+Example shown:
+
+10.112.0.0/16
+
+10.113.0.0/16
+
+Compute
 
 One EC2 instance in each VPC
 
-A VPC Peering Connection between the VPCs
+Connectivity
+
+VPC Peering Connection between both VPCs
 
 Route table updates on both sides so each VPC knows how to reach the other
 
 Security Group rules to allow ICMP (ping)
 
-Validation with ping (private IP → private IP)
+Validation
 
+Connectivity verified using private IP ping
+(private IP → private IP)
 
+✅ Final Outcome
 
-
-VPC Peering Connection between both VPCs
+VPC Peering connection established
 
 Route tables updated on both sides
 
 Security Groups allow ICMP
 
-Connectivity verified via private IP ping
+Private network connectivity confirmed via ping
+
+
+
+
 
 <img width="1891" height="933" alt="vpcarmproject" src="https://github.com/user-attachments/assets/6bd50e1e-4b7c-4d70-9194-0bee235f0782" />
 
