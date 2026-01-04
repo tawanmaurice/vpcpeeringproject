@@ -5,7 +5,7 @@ This project demonstrates VPC Peering between two separate VPCs in AWS (same reg
 (Optional simple HTTP pages are used to visually confirm which instance is being reached.)
 
 🎯 Why This Matters
-(What a Recruiter Should Take Away)
+
 
 In real environments, teams often split infrastructure into multiple VPCs—by application, environment, business unit, or compliance boundary.
 
